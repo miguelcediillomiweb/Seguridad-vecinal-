@@ -3,8 +3,12 @@ import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.g
 import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-storage.js";
 
 const firebaseConfig = {
-  apiKey: "REEMPLAZAR", authDomain: "REEMPLAZAR", projectId: "REEMPLAZAR",
-  storageBucket: "REEMPLAZAR", messagingSenderId: "REEMPLAZAR", appId: "REEMPLAZAR"
+  apiKey: "AIzaSyAOP0jncNB7UcNLRYDhGxh0ehoy_4RmUeA",
+  authDomain: "sistema-de-vigilancia-vecinal.firebaseapp.com",
+  projectId: "sistema-de-vigilancia-vecinal",
+  storageBucket: "sistema-de-vigilancia-vecinal.firebasestorage.app",
+  messagingSenderId: "349121257731",
+  appId: "1:349121257731:web:629adbcb13c41788764936"
 };
 const configured=!Object.values(firebaseConfig).some(v=>v==="REEMPLAZAR");
 let db,storage;
