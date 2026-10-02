@@ -1,6 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
 import { getDatabase, ref as dbRef, push, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-database.js";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-storage.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAOP0jncNB7UcNLRYDhGxh0ehoy_4RmUeA",
@@ -72,12 +71,19 @@ $("reportPhoto").onchange=e=>{
   showPhotoPreview("reportPhoto","reportAttachment",reportPhoto);
 };
 
-async function uploadPhoto(file,folio){
+async function photoToDataUrl(file){
   if(!file)return null;
-  const safe=(file.name||"foto").replace(/[^a-zA-Z0-9._-]/g,"_");
-  const r=ref(storage,"reportes/"+folio+"/"+Date.now()+"_"+safe);
-  await uploadBytes(r,file);
-  return getDownloadURL(r);
+  if(!file.type.startsWith("image/"))throw new Error("El archivo seleccionado no es una imagen.");
+  const maxSide=1000, quality=.68;
+  const bitmap=await createImageBitmap(file);
+  const scale=Math.min(1,maxSide/Math.max(bitmap.width,bitmap.height));
+  const canvas=document.createElement("canvas");
+  canvas.width=Math.max(1,Math.round(bitmap.width*scale));
+  canvas.height=Math.max(1,Math.round(bitmap.height*scale));
+  const ctx=canvas.getContext("2d",{alpha:false});
+  ctx.drawImage(bitmap,0,0,canvas.width,canvas.height);
+  bitmap.close();
+  return canvas.toDataURL("image/jpeg",quality);
 }
 
 async function send(kind){
@@ -100,7 +106,7 @@ async function send(kind){
 
   try{
     $(statusId).textContent=file?"📸 Subiendo foto…":"📍 Preparando ubicación…";
-    const photoUrl=await uploadPhoto(file,folio);
+    const photoUrl=await photoToDataUrl(file);
 
     $(statusId).textContent="📍 Guardando ubicación y reporte…";
     const record={
