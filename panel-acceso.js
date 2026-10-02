@@ -1,0 +1,30 @@
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
+import { getDatabase, ref, get, push, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-database.js";
+
+const firebaseConfig={apiKey:"AIzaSyAOP0jncNB7UcNLRYDhGxh0ehoy_4RmUeA",authDomain:"sistema-de-vigilancia-vecinal.firebaseapp.com",databaseURL:"https://sistema-de-vigilancia-vecinal-default-rtdb.firebaseio.com",projectId:"sistema-de-vigilancia-vecinal",storageBucket:"sistema-de-vigilancia-vecinal.firebasestorage.app",messagingSenderId:"349121257731",appId:"1:349121257731:web:629adbcb13c41788764936"};
+const app=initializeApp(firebaseConfig),db=getDatabase(app);
+const loading=document.getElementById("loading"),denied=document.getElementById("denied"),welcome=document.getElementById("welcome"),who=document.getElementById("who"),deniedText=document.getElementById("deniedText");
+
+function show(el){loading.classList.add("hide");denied.classList.add("hide");welcome.classList.add("hide");el.classList.remove("hide")}
+const token=new URLSearchParams(location.search).get("acceso");
+
+async function main(){
+ if(!token||!/^[A-Za-z0-9_-]{12,80}$/.test(token)){deniedText.textContent="Falta el código de acceso en este enlace.";show(denied);return}
+ try{
+  const snap=await get(ref(db,"accesosPanel/"+token));
+  if(!snap.exists()){show(denied);return}
+  const data=snap.val();
+  if(data.activo===false){deniedText.textContent="Este acceso fue revocado.";show(denied);return}
+  if(data.expiraEn && Date.now()>data.expiraEn){deniedText.textContent="Este acceso ya caducó.";show(denied);return}
+  who.textContent="Acceso asignado a: "+(data.nombre||"Persona autorizada");
+  const deviceId=localStorage.getItem("sv_device_id")||crypto.randomUUID();
+  localStorage.setItem("sv_device_id",deviceId);
+  await push(ref(db,"accesosPanel/"+token+"/usos"),{momento:Date.now(),dispositivo:deviceId,referencia:navigator.userAgent.slice(0,180),fuente:document.referrer||"directo"});
+  sessionStorage.setItem("sv_panel_token",token);
+  sessionStorage.setItem("sv_panel_nombre",data.nombre||"Persona autorizada");
+  const panel=document.getElementById("openPanel");
+  panel.href="panel.html?acceso="+encodeURIComponent(token);
+  show(welcome);
+ }catch(err){deniedText.textContent="No se pudo verificar el acceso. Intenta nuevamente.";show(denied);console.error(err)}
+}
+main();
