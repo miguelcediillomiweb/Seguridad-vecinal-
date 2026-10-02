@@ -52,7 +52,10 @@ async function main(){
   sessionStorage.setItem("sv_panel_rol",data.rol||"policia");
   localStorage.setItem("sv_panel_token",token);
   localStorage.setItem("sv_panel_nombre",data.nombre||"Persona autorizada");
-  localStorage.setItem("sv_panel_rol",data.rol||"policia");\n  document.cookie="sv_panel_token="+encodeURIComponent(token)+"; Max-Age=31536000; Path=/; SameSite=Lax";\n  document.cookie="sv_panel_nombre="+encodeURIComponent(data.nombre||"Persona autorizada")+"; Max-Age=31536000; Path=/; SameSite=Lax";\n  document.cookie="sv_panel_rol="+encodeURIComponent(data.rol||"policia")+"; Max-Age=31536000; Path=/; SameSite=Lax";
+  localStorage.setItem("sv_panel_rol",data.rol||"policia");
+  document.cookie="sv_panel_token="+encodeURIComponent(token)+"; Max-Age=31536000; Path=/; SameSite=Lax";
+  document.cookie="sv_panel_nombre="+encodeURIComponent(data.nombre||"Persona autorizada")+"; Max-Age=31536000; Path=/; SameSite=Lax";
+  document.cookie="sv_panel_rol="+encodeURIComponent(data.rol||"policia")+"; Max-Age=31536000; Path=/; SameSite=Lax";
   openPanel.href="panel.html?acceso="+encodeURIComponent(token);
   openPanel.addEventListener("click",(e)=>{
     e.preventDefault();
