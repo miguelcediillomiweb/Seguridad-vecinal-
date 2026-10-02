@@ -12,7 +12,7 @@ let accessName="Persona autorizada",accessRole="policia",previousIds=new Set(),f
 function setMessage(html,cls="empty"){reports.innerHTML='<div class="'+cls+'">'+html+"</div>";}
 async function verifyAccess(){
  if(!token){setMessage("Abre el panel desde tu enlace individual de acceso.","error");return false;}
- const snap=await get(ref(db,"accesosPanel/"+token)); if(!snap.exists())throw new Error("El enlace de acceso no existe.");
+ const snap=await Promise.race([get(ref(db,"accesosPanel/"+token)),new Promise((_,rej)=>setTimeout(()=>rej(new Error("Firebase no respondió en 10 segundos.")),10000))]); if(!snap.exists())throw new Error("El enlace de acceso no existe.");
  const d=snap.val(); if(d.activo===false)throw new Error("Este acceso fue revocado."); if(d.expiraEn&&Date.now()>d.expiraEn)throw new Error("Este acceso ya caducó.");
  accessName=d.nombre||"Persona autorizada"; accessRole=d.rol||"policia";
  accessInfo.textContent="Acceso: "+accessName+(accessRole==="admin"?" • Administrador":" • Policía");
