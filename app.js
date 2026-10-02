@@ -11,8 +11,8 @@ const firebaseConfig = {
   appId: "1:349121257731:web:629adbcb13c41788764936"
 };
 const configured=!Object.values(firebaseConfig).some(v=>v==="REEMPLAZAR");
-let db,storage;
-if(configured){const app=initializeApp(firebaseConfig);db=getDatabase(app);storage=getStorage(app);}
+let db;
+if(configured){const app=initializeApp(firebaseConfig);db=getDatabase(app);}
 
 const $=id=>document.getElementById(id),views=["inicio","emergencia","reporte","success"];
 document.querySelectorAll("[data-view]").forEach(b=>b.addEventListener("click",()=>show(b.dataset.view)));
@@ -59,7 +59,7 @@ document.querySelectorAll("#emergencyOptions button").forEach(b=>b.onclick=()=>{
 function showPhotoPreview(inputId,attachmentId,file){
   if(!file){$(attachmentId).innerHTML="";return;}
   const url=URL.createObjectURL(file);
-  $(attachmentId).innerHTML=`<div class="photo-ok"><img src="${url}" alt="Vista previa de la foto"><div><strong>📸 Foto lista</strong><br><span>${file.name||"Imagen seleccionada"}</span><small>Se subirá al enviar el reporte.</small></div></div>`;
+  $(attachmentId).innerHTML=`<div class="photo-ok"><img src="${url}" alt="Vista previa de la foto"><div><strong>📸 Foto lista</strong><br><span>${file.name||"Imagen seleccionada"}</span><small>Se procesará al enviar el reporte.</small></div></div>`;
 }
 
 $("emergencyPhoto").onchange=e=>{
@@ -71,26 +71,36 @@ $("reportPhoto").onchange=e=>{
   showPhotoPreview("reportPhoto","reportAttachment",reportPhoto);
 };
 
+function loadImage(file){
+  return new Promise((resolve,reject)=>{
+    const url=URL.createObjectURL(file);
+    const img=new Image();
+    img.onload=()=>{URL.revokeObjectURL(url);resolve(img);};
+    img.onerror=()=>{URL.revokeObjectURL(url);reject(new Error("No se pudo procesar la imagen."));};
+    img.src=url;
+  });
+}
+
 async function photoToDataUrl(file){
   if(!file)return null;
   if(!file.type.startsWith("image/"))throw new Error("El archivo seleccionado no es una imagen.");
   const maxSide=1000, quality=.68;
-  const bitmap=await createImageBitmap(file);
-  const scale=Math.min(1,maxSide/Math.max(bitmap.width,bitmap.height));
+  const img=await loadImage(file);
+  const scale=Math.min(1,maxSide/Math.max(img.naturalWidth,img.naturalHeight));
   const canvas=document.createElement("canvas");
-  canvas.width=Math.max(1,Math.round(bitmap.width*scale));
-  canvas.height=Math.max(1,Math.round(bitmap.height*scale));
+  canvas.width=Math.max(1,Math.round(img.naturalWidth*scale));
+  canvas.height=Math.max(1,Math.round(img.naturalHeight*scale));
   const ctx=canvas.getContext("2d",{alpha:false});
-  ctx.drawImage(bitmap,0,0,canvas.width,canvas.height);
-  bitmap.close();
+  if(!ctx)throw new Error("No se pudo preparar la imagen.");
+  ctx.drawImage(img,0,0,canvas.width,canvas.height);
   return canvas.toDataURL("image/jpeg",quality);
 }
 
 async function send(kind){
   if(!configured){alert("La página ya está preparada, pero falta conectar la configuración de Firebase.");return;}
   const emergency=kind==="emergencia";
-  const type=emergency?emergencyType:$("reportType").value;
-  const description=emergency?$("emergencyDescription").value.trim():$("reportDescription").value.trim();
+  const type=emergency?emergencyType:$( "reportType").value;
+  const description=emergency?$( "emergencyDescription").value.trim():$( "reportDescription").value.trim();
   const selectedLocation=emergency?emergencyLocationData:reportLocationData;
   const file=emergency?emergencyPhoto:reportPhoto;
   const statusId=emergency?"emergencyStatus":"reportStatus";
@@ -102,16 +112,16 @@ async function send(kind){
   const folio="REP-"+Date.now().toString().slice(-8);
   const sendButton=$(emergency?"sendEmergency":"sendReport");
   sendButton.disabled=true;
-  sendButton.textContent=file?"📤 SUBIENDO FOTO…":"📤 ENVIANDO REPORTE…";
+  sendButton.textContent=file?"📤 PREPARANDO FOTO…":"📤 ENVIANDO REPORTE…";
 
   try{
-    $(statusId).textContent=file?"📸 Subiendo foto…":"📍 Preparando ubicación…";
+    $(statusId).textContent=file?"📸 Preparando foto…":"📍 Preparando ubicación…";
     const photoUrl=await photoToDataUrl(file);
 
     $(statusId).textContent="📍 Guardando ubicación y reporte…";
     const record={
       folio,tipo:kind,tipoSuceso:type,descripcion,
-      estaSucediendoAhora:emergency||$("reportNow").value.startsWith("Sí"),
+      estaSucediendoAhora:emergency||$( "reportNow").value.startsWith("Sí"),
       ubicacion:selectedLocation,
       photoUrl,
       fechaHora:serverTimestamp(),
@@ -132,7 +142,7 @@ async function send(kind){
     sendButton.disabled=false;
     sendButton.textContent=emergency?"🚨 ENVIAR EMERGENCIA":"📤 ENVIAR REPORTE";
     $(statusId).textContent="❌ No se pudo completar el envío.";
-    alert("No se pudo enviar el reporte. Revisa la conexión y las reglas de Firebase.");
+    alert("No se pudo enviar el reporte: "+(err?.message||"error desconocido"));
   }
 }
 
