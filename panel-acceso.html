@@ -7,9 +7,10 @@
 </style></head><body><main class="wrap">
 <section class="card" id="loading"><h1>🔐 Verificando acceso</h1><p class="muted">Espera un momento...</p></section>
 <section class="card hide" id="denied"><h1>🚫 Acceso no autorizado</h1><p class="error" id="deniedText">El enlace no es válido o ya caducó.</p><p class="muted small">Solicita un nuevo enlace a la persona que administra el sistema.</p></section>
+<section class="card hide" id="pinBox"><h1>🔐 PIN de acceso</h1><p id="pinWho"></p><p class="muted small">Escribe tu PIN de 6 dígitos. En este dispositivo solo será necesario la primera vez.</p><input id="pinInput" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="PIN de 6 dígitos" style="width:100%;padding:15px;border:1px solid #ccd3df;border-radius:12px;font-size:1.2rem;letter-spacing:5px;text-align:center"><button class="btn" id="verifyPin">🔓 Verificar PIN</button><p id="pinError" class="error hide"></p></section>
 <section class="card hide" id="welcome"><h1>🚓 Acceso autorizado</h1><p id="who"></p><div class="ok">✅ Acceso registrado correctamente.</div>
 <button class="btn install hide" id="installApp">📲 INSTALAR APLICACIÓN</button>
 <a class="btn" id="openPanel" href="panel.html">ENTRAR AL PANEL</a>
 <p class="muted small" id="installHelp">Al entrar, el sistema intentará ofrecer la instalación de la aplicación para que no tengas que buscarla después.</p>
 <p class="muted small">Este enlace identifica el acceso asignado y puede ser revocado posteriormente.</p></section>
-</main><script type="module" src="panel-acceso-v5.js?v=20261002-fixed"></script></body></html>
+</main><script type="module" src="panel-acceso-v5.js?v=20261002-pin"></script></body></html>
