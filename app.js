@@ -1,10 +1,11 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
-import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
+import { getDatabase, ref as dbRef, push, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-database.js";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-storage.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAOP0jncNB7UcNLRYDhGxh0ehoy_4RmUeA",
   authDomain: "sistema-de-vigilancia-vecinal.firebaseapp.com",
+  databaseURL: "https://sistema-de-vigilancia-vecinal-default-rtdb.firebaseio.com",
   projectId: "sistema-de-vigilancia-vecinal",
   storageBucket: "sistema-de-vigilancia-vecinal.firebasestorage.app",
   messagingSenderId: "349121257731",
@@ -12,7 +13,7 @@ const firebaseConfig = {
 };
 const configured=!Object.values(firebaseConfig).some(v=>v==="REEMPLAZAR");
 let db,storage;
-if(configured){const app=initializeApp(firebaseConfig);db=getFirestore(app);storage=getStorage(app);}
+if(configured){const app=initializeApp(firebaseConfig);db=getDatabase(app);storage=getStorage(app);}
 
 const $=id=>document.getElementById(id),views=["inicio","emergencia","reporte","success"];
 document.querySelectorAll("[data-view]").forEach(b=>b.addEventListener("click",()=>show(b.dataset.view)));
@@ -41,9 +42,7 @@ function getLocation(kind){
       $(attachmentId).innerHTML=`<div class="location-ok">📍 <strong>Ubicación obtenida</strong><br><span>Precisión aproximada: ±${data.accuracy} m</span><small>Se enviará junto con tu reporte al presionar ENVIAR.</small></div>`;
       setStatus("✅ Ubicación lista para enviar.");
     },
-    ()=>{
-      setStatus("❌ No se pudo obtener la ubicación. Revisa el permiso de ubicación del navegador e inténtalo de nuevo.");
-    },
+    ()=>{setStatus("❌ No se pudo obtener la ubicación. Revisa el permiso de ubicación del navegador e inténtalo de nuevo.");},
     {enableHighAccuracy:true,timeout:20000,maximumAge:0}
   );
 }
@@ -92,10 +91,7 @@ async function send(kind){
 
   if(!type){alert("Selecciona qué está sucediendo.");return;}
   if(!description&&!emergency){alert("Describe brevemente lo sucedido.");return;}
-  if(!selectedLocation){
-    alert("Primero comparte tu ubicación para que podamos enviarla junto con el reporte.");
-    return;
-  }
+  if(!selectedLocation){alert("Primero comparte tu ubicación para que podamos enviarla junto con el reporte.");return;}
 
   const folio="REP-"+Date.now().toString().slice(-8);
   const sendButton=$(emergency?"sendEmergency":"sendReport");
@@ -107,14 +103,15 @@ async function send(kind){
     const photoUrl=await uploadPhoto(file,folio);
 
     $(statusId).textContent="📍 Guardando ubicación y reporte…";
-    await addDoc(collection(db,"registros"),{
+    const record={
       folio,tipo:kind,tipoSuceso:type,descripcion,
       estaSucediendoAhora:emergency||$("reportNow").value.startsWith("Sí"),
       ubicacion:selectedLocation,
       photoUrl,
       fechaHora:serverTimestamp(),
       estado:"nuevo"
-    });
+    };
+    await push(dbRef(db,"registros"),record);
 
     $("folio").textContent="Folio: "+folio;
     $("successDetails").innerHTML=`
@@ -129,7 +126,7 @@ async function send(kind){
     sendButton.disabled=false;
     sendButton.textContent=emergency?"🚨 ENVIAR EMERGENCIA":"📤 ENVIAR REPORTE";
     $(statusId).textContent="❌ No se pudo completar el envío.";
-    alert("No se pudo enviar el reporte. Revisa la conexión y la configuración de Firebase.");
+    alert("No se pudo enviar el reporte. Revisa la conexión y las reglas de Firebase.");
   }
 }
 
