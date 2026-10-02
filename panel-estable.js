@@ -35,6 +35,6 @@ function render(data){
  reports.querySelectorAll(".share").forEach(b=>b.onclick=()=>{const r=arr.find(x=>x.id===b.dataset.id);if(r)shareReport(r);});
  if(accessRole!=="admin")reports.querySelectorAll(".share").forEach(b=>b.remove());
 }
-async function start(){try{if(!(await verifyAccess()))return;if("serviceWorker"in navigator)await navigator.serviceWorker.register("./sw.js");onValue(ref(db,"registros"),snap=>render(snap.val()),err=>setMessage("No se pudieron cargar los reportes: "+esc(err.message),"error"));}catch(e){setMessage("🚫 "+esc(e.message||e),"error");}}
+async function start(){try{if(!(await verifyAccess()))return;if("serviceWorker"in navigator)await navigator.serviceWorker.register("./sw.js");const snap=await Promise.race([get(ref(db,"registros")),new Promise((_,rej)=>setTimeout(()=>rej(new Error("Firebase no respondió en 10 segundos.")),10000))]);render(snap.val());}catch(e){setMessage("🚫 "+esc(e.message||e),"error");}}
 document.getElementById("refresh").onclick=()=>location.reload();
 window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredInstall=e;installBtn.hidden=false;});installBtn.onclick=async()=>{if(!deferredInstall)return;deferredInstall.prompt();await deferredInstall.userChoice;deferredInstall=null;installBtn.hidden=true;};if(window.matchMedia("(display-mode: standalone)").matches)installBtn.hidden=true;start();
