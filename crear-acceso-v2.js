@@ -8,7 +8,7 @@ $("crear").onclick=async()=>{
  try{
   const token=crypto.randomUUID().replaceAll("-","");
   const expiraEn=dur?Date.now()+dur:null;
-  await set(ref(db,"accesosPanel/"+token),{nombre,rol,activo:true,creadoEn:Date.now(),expiraEn,pinHash:await hashPin(pin)});
+  await set(ref(db,"accesosPanel/"+token),{nombre,rol,activo:true,creadoEn:Date.now(),expiraEn,pinHash:await hashPin(pin),pinVersion:Date.now()});
   const url=new URL("panel-acceso.html",location.href);url.searchParams.set("acceso",token);
   const o=$("resultado");o.classList.remove("hide");
   o.innerHTML="<strong>"+(rol==="admin"?"🛡️ Administrador":"👮 Policía")+" — "+nombre+"</strong><br><br>"+url.href+"<br><br><strong>🔐 PIN inicial:</strong> "+pin+"<br><br><small>Entrega el PIN personalmente y no lo publiques en grupos. El sistema no guardará el PIN visible.</small>";
