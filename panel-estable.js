@@ -12,7 +12,7 @@ let accessName="Persona autorizada",accessRole="policia",previousIds=new Set(),f
 function setMessage(html,cls="empty"){reports.innerHTML='<div class="'+cls+'">'+html+"</div>";}
 async function verifyAccess(){
  if(!token){setMessage("Abre el panel desde tu enlace individual de acceso.","error");return false;}
- const snap=await get(ref(db,"accesosPanel/"+token)); if(!snap.exists())throw new Error("El enlace de acceso no existe.");
+ const snap=await Promise.race([get(ref(db,"accesosPanel/"+token)),new Promise((_,rej)=>setTimeout(()=>rej(new Error("Firebase no respondió en 10 segundos.")),10000))]); if(!snap.exists())throw new Error("El enlace de acceso no existe.");
  const d=snap.val(); if(d.activo===false)throw new Error("Este acceso fue revocado."); if(d.expiraEn&&Date.now()>d.expiraEn)throw new Error("Este acceso ya caducó.");
  accessName=d.nombre||"Persona autorizada"; accessRole=d.rol||"policia";
  accessInfo.textContent="Acceso: "+accessName+(accessRole==="admin"?" • Administrador":" • Policía");
@@ -35,6 +35,6 @@ function render(data){
  reports.querySelectorAll(".share").forEach(b=>b.onclick=()=>{const r=arr.find(x=>x.id===b.dataset.id);if(r)shareReport(r);});
  if(accessRole!=="admin")reports.querySelectorAll(".share").forEach(b=>b.remove());
 }
-async function start(){try{if(!(await verifyAccess()))return;if("serviceWorker"in navigator)await navigator.serviceWorker.register("./sw.js");const snap=await Promise.race([get(ref(db,"registros")),new Promise((_,rej)=>setTimeout(()=>rej(new Error("Firebase no respondió en 10 segundos.")),10000))]);render(snap.val());}catch(e){setMessage("🚫 "+esc(e.message||e),"error");}}
+async function start(){try{if(!(await verifyAccess()))return;if("serviceWorker"in navigator)await navigator.serviceWorker.register("./sw.js");onValue(ref(db,"registros"),snap=>render(snap.val()),err=>setMessage("No se pudieron cargar los reportes: "+esc(err.message),"error"));}catch(e){setMessage("🚫 "+esc(e.message||e),"error");}}
 document.getElementById("refresh").onclick=()=>location.reload();
 window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredInstall=e;installBtn.hidden=false;});installBtn.onclick=async()=>{if(!deferredInstall)return;deferredInstall.prompt();await deferredInstall.userChoice;deferredInstall=null;installBtn.hidden=true;};if(window.matchMedia("(display-mode: standalone)").matches)installBtn.hidden=true;start();
