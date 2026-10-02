@@ -1,8 +1,10 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
 import { getDatabase, ref, get, push } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-database.js";
+import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
 const firebaseConfig={apiKey:"AIzaSyAOP0jncNB7UcNLRYDhGxh0ehoy_4RmUeA",authDomain:"sistema-de-vigilancia-vecinal.firebaseapp.com",databaseURL:"https://sistema-de-vigilancia-vecinal-default-rtdb.firebaseio.com",projectId:"sistema-de-vigilancia-vecinal",storageBucket:"sistema-de-vigilancia-vecinal.firebasestorage.app",messagingSenderId:"349121257731",appId:"1:349121257731:web:629adbcb13c41788764936"};
-const db=getDatabase(initializeApp(firebaseConfig));
+const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getDatabase(app);
 const loading=document.getElementById("loading"),denied=document.getElementById("denied"),welcome=document.getElementById("welcome"),pinBox=document.getElementById("pinBox"),who=document.getElementById("who"),pinWho=document.getElementById("pinWho"),deniedText=document.getElementById("deniedText"),pinInput=document.getElementById("pinInput"),pinError=document.getElementById("pinError"),verifyPin=document.getElementById("verifyPin"),installBtn=document.getElementById("installApp"),openPanel=document.getElementById("openPanel");
+await signInAnonymously(auth);
 let deferredInstallPrompt=null;
 if("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(()=>{});
 window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredInstallPrompt=e;installBtn.classList.remove("hide")});
