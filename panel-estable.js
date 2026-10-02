@@ -1,8 +1,10 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
 import { getDatabase, ref, onValue, get, update } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-database.js";
+import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
 
 const firebaseConfig={apiKey:"AIzaSyAOP0jncNB7UcNLRYDhGxh0ehoy_4RmUeA",authDomain:"sistema-de-vigilancia-vecinal.firebaseapp.com",databaseURL:"https://sistema-de-vigilancia-vecinal-default-rtdb.firebaseio.com",projectId:"sistema-de-vigilancia-vecinal",storageBucket:"sistema-de-vigilancia-vecinal.firebasestorage.app",messagingSenderId:"349121257731",appId:"1:349121257731:web:629adbcb13c41788764936"};
-const db=getDatabase(initializeApp(firebaseConfig));
+const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getDatabase(app);
+await signInAnonymously(auth);
 const reports=document.getElementById("reports"),accessInfo=document.getElementById("accessInfo"),notifyBtn=document.getElementById("notifyBtn"),installBtn=document.getElementById("installBtn"),usersBtn=document.getElementById("usersBtn");
 const esc=v=>String(v??"").replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[m]));
 const params=new URLSearchParams(location.search);
