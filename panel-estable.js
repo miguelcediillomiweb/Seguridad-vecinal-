@@ -9,11 +9,11 @@ const params=new URLSearchParams(location.search);
 function getCookie(n){const m=document.cookie.match(new RegExp("(^|;\\s*)"+n+"=([^;]*)"));return m?decodeURIComponent(m[2]):"";}
 const token=params.get("acceso")||sessionStorage.getItem("sv_panel_token")||localStorage.getItem("sv_panel_token")||getCookie("sv_panel_token");
 let accessName="Persona autorizada",accessRole="policia",previousIds=new Set(),firstLoad=true,deferredInstall=null;
-function setMessage(html,cls="empty"){reports.innerHTML='<div class="'+cls+'">'+html+"</div>";}
+function setMessage(html,cls="empty"){reports.innerHTML='<div class="'+cls+'">'+html+"</div>";} async function hashPin(pin){const b=new TextEncoder().encode(pin);const h=await crypto.subtle.digest("SHA-256",b);return [...new Uint8Array(h)].map(x=>x.toString(16).padStart(2,"0")).join("");}
 async function verifyAccess(){
  if(!token){setMessage("Abre el panel desde tu enlace individual de acceso.","error");return false;}
  const snap=await Promise.race([get(ref(db,"accesosPanel/"+token)),new Promise((_,rej)=>setTimeout(()=>rej(new Error("Firebase no respondió en 10 segundos.")),10000))]); if(!snap.exists())throw new Error("El enlace de acceso no existe.");
- const d=snap.val(); if(d.activo===false)throw new Error("Este acceso fue revocado."); if(d.expiraEn&&Date.now()>d.expiraEn)throw new Error("Este acceso ya caducó.");
+ const d=snap.val(); if(d.activo===false)throw new Error("Este acceso fue revocado."); if(d.expiraEn&&Date.now()>d.expiraEn)throw new Error("Este acceso ya caducó."); if(d.pinHash){const pv=String(d.pinVersion||"1"),key="sv_pin_ok_"+token;if(localStorage.getItem(key)!==pv){let ok=false;for(let intento=0;intento<3&&!ok;intento++){const pin=prompt("🔐 Ingresa tu PIN de 6 dígitos para este dispositivo:");if(pin===null)throw new Error("Acceso cancelado.");if(/^\d{6}$/.test(pin)&&await hashPin(pin)===d.pinHash){ok=true;localStorage.setItem(key,pv);}}if(!ok)throw new Error("PIN incorrecto. Contacta al administrador para restablecerlo.");}}
  accessName=d.nombre||"Persona autorizada"; accessRole=d.rol||"policia";
  accessInfo.textContent="Acceso: "+accessName+(accessRole==="admin"?" • Administrador":" • Policía");
  for(const s of [sessionStorage,localStorage]){s.setItem("sv_panel_token",token);s.setItem("sv_panel_nombre",accessName);s.setItem("sv_panel_rol",accessRole);}
