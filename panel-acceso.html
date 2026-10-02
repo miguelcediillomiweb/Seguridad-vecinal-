@@ -1,10 +1,15 @@
 <!doctype html>
 <html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="manifest" href="manifest.json"><link rel="icon" href="icon.svg"><meta name="theme-color" content="#0b5cff">
 <title>Acceso privado - Seguridad Vecinal</title>
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:#071b3a;color:#14213d;min-height:100vh}.wrap{max-width:760px;margin:auto;padding:18px}.card{background:#fff;border-radius:20px;padding:22px;box-shadow:0 12px 35px #0004;margin-bottom:16px}h1{margin:0 0 8px}.muted{color:#5b6678}.ok{background:#edf9f0;border:1px solid #b8e3c2;color:#176b2d;padding:12px;border-radius:12px}.warn{background:#fff4df;border:1px solid #f1d19a;color:#7a5600;padding:12px;border-radius:12px}.error{background:#ffe6e6;border:1px solid #efb4b4;color:#a21b1b;padding:12px;border-radius:12px}.btn{display:block;width:100%;border:0;border-radius:14px;padding:15px;background:#0b5cff;color:#fff;font:inherit;font-weight:900;text-decoration:none;text-align:center;margin-top:14px}.small{font-size:.86rem}.hide{display:none}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:#071b3a;color:#14213d;min-height:100vh}.wrap{max-width:760px;margin:auto;padding:18px}.card{background:#fff;border-radius:20px;padding:22px;box-shadow:0 12px 35px #0004;margin-bottom:16px}h1{margin:0 0 8px}.muted{color:#5b6678}.ok{background:#edf9f0;border:1px solid #b8e3c2;color:#176b2d;padding:12px;border-radius:12px}.warn{background:#fff4df;border:1px solid #f1d19a;color:#7a5600;padding:12px;border-radius:12px}.error{background:#ffe6e6;border:1px solid #efb4b4;color:#a21b1b;padding:12px;border-radius:12px}.btn{display:block;width:100%;border:0;border-radius:14px;padding:15px;background:#0b5cff;color:#fff;font:inherit;font-weight:900;text-decoration:none;text-align:center;margin-top:14px;cursor:pointer}.btn.install{background:#087f3e}.small{font-size:.86rem}.hide{display:none}
 </style></head><body><main class="wrap">
 <section class="card" id="loading"><h1>🔐 Verificando acceso</h1><p class="muted">Espera un momento...</p></section>
 <section class="card hide" id="denied"><h1>🚫 Acceso no autorizado</h1><p class="error" id="deniedText">El enlace no es válido o ya caducó.</p><p class="muted small">Solicita un nuevo enlace a la persona que administra el sistema.</p></section>
-<section class="card hide" id="welcome"><h1>🚓 Acceso autorizado</h1><p id="who"></p><div class="ok">✅ Acceso registrado correctamente.</div><a class="btn" id="openPanel" href="panel.html">ENTRAR AL PANEL</a><p class="muted small">Este enlace identifica el acceso asignado y puede ser revocado posteriormente.</p></section>
-</main><script type="module" src="panel-acceso.js?v=20261002-1"></script></body></html>
+<section class="card hide" id="welcome"><h1>🚓 Acceso autorizado</h1><p id="who"></p><div class="ok">✅ Acceso registrado correctamente.</div>
+<button class="btn install hide" id="installApp">📲 INSTALAR APLICACIÓN</button>
+<a class="btn" id="openPanel" href="panel.html">ENTRAR AL PANEL</a>
+<p class="muted small" id="installHelp">Al entrar, el sistema intentará ofrecer la instalación de la aplicación para que no tengas que buscarla después.</p>
+<p class="muted small">Este enlace identifica el acceso asignado y puede ser revocado posteriormente.</p></section>
+</main><script type="module" src="panel-acceso-v2.js?v=20261002-install1"></script></body></html>
