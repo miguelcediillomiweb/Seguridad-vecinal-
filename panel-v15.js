@@ -23,7 +23,8 @@ async function verifyAccess(){
 async function enableNotifications(){if(!("Notification"in window)){alert("Este navegador no permite notificaciones.");return;}const p=await Notification.requestPermission();if(p==="granted"){notifyBtn.textContent="🔔 Notificaciones activadas";notifyBtn.disabled=true;}else alert("Debes permitir las notificaciones del navegador.");}
 notifyBtn.onclick=enableNotifications;
 function notifyNew(r){if(!("Notification"in window)||Notification.permission!=="granted")return;const title="🚨 Nuevo reporte vecinal",body=(r.tipoSuceso||"Emergencia")+" • "+(r.folio||"Sin folio");navigator.serviceWorker?.ready.then(reg=>reg.showNotification(title,{body,tag:"reporte-"+(r.folio||Date.now()),renotify:true,icon:"icon.svg",badge:"icon.svg"})).catch(()=>new Notification(title,{body}));}
-function summaryText(r){return ["🚨 REPORTE DE SEGURIDAD VECINAL","Folio: "+(r.folio||"Sin folio"),"Situación: "+(r.tipoSuceso||"Sin especificar"),r.descripcion?"Hechos: "+r.descripcion:"","Estado: "+(r.estado||"nuevo").toUpperCase()].filter(Boolean).join("\n");}
+function summaryText(r){return ["🚨 REPORTE DE SEGURIDAD VECINAL","Folio: "+(r.folio||"Sin folio"),"Situación: "+(r.tipoSuceso||"Sin especificar"),r.descripcion?"Hechos: "+r.descripcion:"","Estado: "+(r.estado||"nuevo").toUpperCase()].filter(Boolean).join("
+");}
 async function shareReport(r){const text=summaryText(r);if(navigator.share){try{await navigator.share({title:"Reporte vecinal "+(r.folio||""),text});return;}catch(e){if(e.name==="AbortError")return;}}await navigator.clipboard?.writeText(text);alert("Resumen copiado.");}
 async function changeStatus(id,status){await update(ref(db,"registros/"+id),{estado:status,actualizadoEn:Date.now(),atendidoPor:accessName});}
 function render(data){
