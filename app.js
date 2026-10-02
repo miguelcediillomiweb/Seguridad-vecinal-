@@ -56,7 +56,7 @@ document.querySelectorAll("#emergencyOptions button").forEach(b=>b.onclick=()=>{
   $("emergencySelected").textContent="Seleccionado: "+emergencyType;
 });
 
-function showPhotoPreview(inputId,attachmentId,file){
+function showPhotoPreview(attachmentId,file){
   if(!file){$(attachmentId).innerHTML="";return;}
   const url=URL.createObjectURL(file);
   $(attachmentId).innerHTML=`<div class="photo-ok"><img src="${url}" alt="Vista previa de la foto"><div><strong>📸 Foto lista</strong><br><span>${file.name||"Imagen seleccionada"}</span><small>Se procesará al enviar el reporte.</small></div></div>`;
@@ -64,11 +64,11 @@ function showPhotoPreview(inputId,attachmentId,file){
 
 $("emergencyPhoto").onchange=e=>{
   emergencyPhoto=e.target.files[0]||null;
-  showPhotoPreview("emergencyPhoto","emergencyAttachment",emergencyPhoto);
+  showPhotoPreview("emergencyAttachment",emergencyPhoto);
 };
 $("reportPhoto").onchange=e=>{
   reportPhoto=e.target.files[0]||null;
-  showPhotoPreview("reportPhoto","reportAttachment",reportPhoto);
+  showPhotoPreview("reportAttachment",reportPhoto);
 };
 
 function loadImage(file){
@@ -115,30 +115,38 @@ async function send(kind){
   sendButton.textContent=file?"📤 PREPARANDO FOTO…":"📤 ENVIANDO REPORTE…";
 
   try{
-    $(statusId).textContent=file?"📸 Preparando foto…":"📍 Preparando ubicación…";
-    const photoUrl=await photoToDataUrl(file);
+    let photoUrl=null;
+    if(file){
+      $(statusId).textContent="📸 Preparando foto…";
+      photoUrl=await photoToDataUrl(file);
+    }else{
+      $(statusId).textContent="📍 Guardando ubicación y reporte…";
+    }
 
-    $(statusId).textContent="📍 Guardando ubicación y reporte…";
     const record={
-      folio,tipo:kind,tipoSuceso:type,descripcion,
+      folio,
+      tipo:kind,
+      tipoSuceso:type,
+      descripcion,
       estaSucediendoAhora:emergency||$( "reportNow").value.startsWith("Sí"),
       ubicacion:selectedLocation,
-      photoUrl,
       fechaHora:serverTimestamp(),
       estado:"nuevo"
     };
+    if(photoUrl) record.photoUrl=photoUrl;
+
     await push(dbRef(db,"registros"),record);
 
     $("folio").textContent="Folio: "+folio;
     $("successDetails").innerHTML=`
       <div>📍 <strong>Ubicación enviada</strong><br><span>Precisión aproximada: ±${selectedLocation.accuracy} m</span></div>
-      <div>${photoUrl?"📸 <strong>Foto enviada correctamente</strong>":"📸 Sin foto adjunta"}</div>
+      <div>${photoUrl?"📸 <strong>Foto enviada correctamente</strong>":"📸 Sin foto adjunta (opcional)"}</div>
       <p>Tu información quedó registrada para las personas autorizadas.</p>`;
     sendButton.disabled=false;
     sendButton.textContent=emergency?"🚨 ENVIAR EMERGENCIA":"📤 ENVIAR REPORTE";
     show("success");
   }catch(err){
-    console.error(err);
+    console.error("Error al enviar reporte:",err);
     sendButton.disabled=false;
     sendButton.textContent=emergency?"🚨 ENVIAR EMERGENCIA":"📤 ENVIAR REPORTE";
     $(statusId).textContent="❌ No se pudo completar el envío.";
