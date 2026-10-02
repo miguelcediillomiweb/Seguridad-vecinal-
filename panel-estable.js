@@ -24,7 +24,7 @@ async function enableNotifications(){if(!("Notification"in window)){alert("Este 
 notifyBtn.onclick=enableNotifications;
 function notifyNew(r){if(!("Notification"in window)||Notification.permission!=="granted")return;const title="🚨 Nuevo reporte vecinal",body=(r.tipoSuceso||"Emergencia")+" • "+(r.folio||"Sin folio");navigator.serviceWorker?.ready.then(reg=>reg.showNotification(title,{body,tag:"reporte-"+(r.folio||Date.now()),renotify:true,icon:"icon.svg",badge:"icon.svg"})).catch(()=>new Notification(title,{body}));}
 function summaryText(r){return ["🚨 REPORTE DE SEGURIDAD VECINAL","Folio: "+(r.folio||"Sin folio"),"Situación: "+(r.tipoSuceso||"Sin especificar"),r.descripcion?"Hechos: "+r.descripcion:"","Estado: "+(r.estado||"nuevo").toUpperCase()].filter(Boolean).join("\n");}
-async function shareReport(r){const text=summaryText(r);if(navigator.share){try{await navigator.share({title:"Reporte vecinal "+(r.folio||""),text});return;}catch(e){if(e.name==="AbortError")return;}}await navigator.clipboard?.writeText(text);alert("Resumen copiado.");}
+async function shareReport(r){const text=summaryText(r);const wa="https://wa.me/?text="+encodeURIComponent(text);window.open(wa,"_blank","noopener,noreferrer");}
 async function changeStatus(id,status){await update(ref(db,"registros/"+id),{estado:status,actualizadoEn:Date.now(),atendidoPor:accessName});}
 function render(data){
  const arr=Object.entries(data||{}).map(([id,r])=>({...r,id})).sort((a,b)=>(b.fechaHora||0)-(a.fechaHora||0)); const current=new Set(arr.map(r=>r.id));
