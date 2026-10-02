@@ -1,7 +1,9 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
 import { getDatabase,ref,get,onValue,update,remove } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-database.js";
+import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
 const cfg={apiKey:"AIzaSyAOP0jncNB7UcNLRYDhGxh0ehoy_4RmUeA",authDomain:"sistema-de-vigilancia-vecinal.firebaseapp.com",databaseURL:"https://sistema-de-vigilancia-vecinal-default-rtdb.firebaseio.com",projectId:"sistema-de-vigilancia-vecinal",storageBucket:"sistema-de-vigilancia-vecinal.firebasestorage.app",messagingSenderId:"349121257731",appId:"1:349121257731:web:629adbcb13c41788764936"};
-const db=getDatabase(initializeApp(cfg)),users=document.getElementById("users"),auth=document.getElementById("auth");
+const app=initializeApp(cfg),auth=getAuth(app),db=getDatabase(app),users=document.getElementById("users"),auth=document.getElementById("auth");
+await signInAnonymously(auth);
 const adminToken=new URLSearchParams(location.search).get("admin");
 const esc=v=>String(v??"").replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[m]));
 async function check(){if(!adminToken)throw new Error("Falta el enlace administrativo.");const s=await get(ref(db,"accesosPanel/"+adminToken));if(!s.exists()||s.val().activo===false||s.val().rol!=="admin")throw new Error("Este enlace no corresponde a un administrador activo.");auth.textContent="Administrador: "+(s.val().nombre||"Sin nombre");}
