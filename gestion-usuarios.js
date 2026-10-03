@@ -12,5 +12,5 @@ users.querySelectorAll("[data-pin]").forEach(b=>b.onclick=async()=>{const t=b.da
 users.querySelectorAll("[data-delete]").forEach(b=>b.onclick=async()=>{const t=b.dataset.delete,n=users.querySelector('[data-field="nombre"][data-token="'+t+'"]').value;if(!confirm("¿Eliminar definitivamente el acceso de "+n+"? Los reportes históricos no se borrarán."))return;await remove(ref(db,"accesosPanel/"+t));});
 users.querySelectorAll("[data-toggle]").forEach(b=>b.onclick=async()=>{const t=b.dataset.toggle,s=await get(ref(db,"accesosPanel/"+t));await update(ref(db,"accesosPanel/"+t),{activo:s.val().activo===false,actualizadoEn:Date.now()});});
 }
-document.getElementById("new").onclick=()=>location.href="crear-acceso.html";
+document.getElementById("new").onclick=()=>{const a=new URLSearchParams(location.search).get("admin");location.href="crear-acceso.html"+(a?"?admin="+encodeURIComponent(a):"");};
 check().then(()=>onValue(ref(db,"accesosPanel"),s=>render(s.val()))).catch(e=>{users.innerHTML='<section class="card" style="color:#a21b1b">🚫 '+esc(e.message)+'</section>';auth.textContent="Acceso rechazado";});
