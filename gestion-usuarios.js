@@ -15,4 +15,4 @@ users.querySelectorAll("[data-delete]").forEach(b=>b.onclick=async()=>{const t=b
 users.querySelectorAll("[data-toggle]").forEach(b=>b.onclick=async()=>{const t=b.dataset.toggle,s=await get(ref(db,"accesosPanel/"+t));await update(ref(db,"accesosPanel/"+t),{activo:s.val().activo===false,actualizadoEn:Date.now()});});
 }
 document.getElementById("new").onclick=()=>location.href="crear-acceso.html";
-check().then(()=>onValue(ref(db,"accesosPanel"),s=>render(s.val()))).catch(e=>{users.innerHTML='<section class="card" style="color:#a21b1b">🚫 '+esc(e.message)+'</section>';auth.textContent="Acceso rechazado";});
+check().then(()=>onValue(ref(db,"accesosPanel"),s=>render(s.val()))).catch(e=>{users.innerHTML='<section class="card" style="color:#a21b1b">🚫 '+esc(e.message)+'</section>';authBox.textContent="Acceso rechazado";});
