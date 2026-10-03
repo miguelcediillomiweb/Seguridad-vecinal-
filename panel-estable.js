@@ -1,8 +1,9 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
-import { getDatabase, ref, onValue, get, update } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-database.js";
+import { getDatabase, ref, onValue, get, update, set } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-database.js";
+import { getMessaging, getToken } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-messaging.js";
 
 const firebaseConfig={apiKey:"AIzaSyAOP0jncNB7UcNLRYDhGxh0ehoy_4RmUeA",authDomain:"sistema-de-vigilancia-vecinal.firebaseapp.com",databaseURL:"https://sistema-de-vigilancia-vecinal-default-rtdb.firebaseio.com",projectId:"sistema-de-vigilancia-vecinal",storageBucket:"sistema-de-vigilancia-vecinal.firebasestorage.app",messagingSenderId:"349121257731",appId:"1:349121257731:web:629adbcb13c41788764936"};
-const db=getDatabase(initializeApp(firebaseConfig));
+const app=initializeApp(firebaseConfig);\nconst db=getDatabase(app);\nconst messaging=getMessaging(app);\nconst VAPID_KEY=["BDtV7hjMY4bSrTzT","Csxun2GgTrJY3u6i","kxdNlqubFpdVQ2-g","IXg49-F-qLEZ1vRN","pAugFV2qKQSCTMQN","qSlzY0M"].join("");
 const reports=document.getElementById("reports"),accessInfo=document.getElementById("accessInfo"),notifyBtn=document.getElementById("notifyBtn"),installBtn=document.getElementById("installBtn"),usersBtn=document.getElementById("usersBtn");
 const esc=v=>String(v??"").replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[m]));
 const params=new URLSearchParams(location.search);
@@ -20,7 +21,7 @@ async function verifyAccess(){
  if(accessRole==="admin"){usersBtn.hidden=false;usersBtn.onclick=()=>location.href="gestion-usuarios.html?admin="+encodeURIComponent(token);}else usersBtn.hidden=true;
  return true;
 }
-async function enableNotifications(){if(!("Notification"in window)){alert("Este navegador no permite notificaciones.");return;}const p=await Notification.requestPermission();if(p==="granted"){notifyBtn.textContent="🔔 Notificaciones activadas";notifyBtn.disabled=true;}else alert("Debes permitir las notificaciones del navegador.");}
+async function sha256(value){const data=new TextEncoder().encode(value);const hash=await crypto.subtle.digest("SHA-256",data);return [...new Uint8Array(hash)].map(x=>x.toString(16).padStart(2,"0")).join("");}\nasync function enableNotifications(){if(!("Notification"in window)){alert("Este navegador no permite notificaciones.");return;}try{const p=await Notification.requestPermission();if(p!=="granted"){alert("Debes permitir las notificaciones del navegador.");return;}const registration=await navigator.serviceWorker.ready;const currentToken=await getToken(messaging,{vapidKey:VAPID_KEY,serviceWorkerRegistration:registration});if(!currentToken)throw new Error("Firebase no devolvió el token del dispositivo.");const deviceId=await sha256(currentToken);await set(ref(db,"notificaciones/"+token+"/devices/"+deviceId),{fcmToken:currentToken,rol:accessRole,nombre:accessName,activo:true,actualizadoEn:Date.now()});notifyBtn.textContent="🔔 Notificaciones activadas";notifyBtn.disabled=true;alert("✅ Este dispositivo quedó registrado para recibir alertas.");}catch(e){console.error(e);alert("No se pudieron activar las notificaciones: "+(e.message||e));}}
 notifyBtn.onclick=enableNotifications;
 function notifyNew(r){if(!("Notification"in window)||Notification.permission!=="granted")return;const title="🚨 Nuevo reporte vecinal",body=(r.tipoSuceso||"Emergencia")+" • "+(r.folio||"Sin folio");navigator.serviceWorker?.ready.then(reg=>reg.showNotification(title,{body,tag:"reporte-"+(r.folio||Date.now()),renotify:true,icon:"icon.svg",badge:"icon.svg"})).catch(()=>new Notification(title,{body}));}
 function summaryText(r){return ["🚨 REPORTE DE SEGURIDAD VECINAL","Folio: "+(r.folio||"Sin folio"),"Situación: "+(r.tipoSuceso||"Sin especificar"),r.descripcion?"Hechos: "+r.descripcion:"","Estado: "+(r.estado||"nuevo").toUpperCase()].filter(Boolean).join("\n");}
