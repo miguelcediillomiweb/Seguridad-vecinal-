@@ -1,1 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Reporte vecinal</title>
+  <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+  <main class="contenedor">
 
+    <h1 id="saludo">Hola 👋</h1>
+    <p class="subtitulo">Cuéntanos qué está pasando.</p>
+
+    <section>
+      <h2>1. ¿Qué está pasando?</h2>
+      <div class="tipos" id="tipos">
+        <button type="button" class="tipo" data-tipo="Robo">🚨 Robo</button>
+        <button type="button" class="tipo" data-tipo="Persona sospechosa">👀 Persona sospechosa</button>
+        <button type="button" class="tipo" data-tipo="Incendio">🔥 Incendio</button>
+        <button type="button" class="tipo" data-tipo="Vehículo extraño">🚗 Vehículo extraño</button>
+        <button type="button" class="tipo" data-tipo="Otro">🆘 Otro</button>
+      </div>
+    </section>
+
+    <section>
+      <h2>2. ¿Dónde está pasando?</h2>
+      <button type="button" id="btnUbicacion" class="grande">📍 Enviar mi ubicación</button>
+      <p id="estadoUbicacion" class="estado"></p>
+    </section>
+
+    <section>
+      <h2>3. Toma una foto</h2>
+      <input type="file" id="inputFoto" accept="image/*" capture="environment" hidden>
+      <button type="button" id="btnFoto" class="grande">📷 Tomar foto</button>
+      <img id="miniatura" alt="Foto del reporte" hidden>
+    </section>
+
+    <section>
+      <h2>4. Tu nombre (opcional)</h2>
+      <input type="text" id="nombre" placeholder="Escribe tu nombre" autocomplete="name">
+      <p class="leyenda">
+        💬 Si gustas, escribe tu nombre. Solo lo verá el administrador,
+        nunca el policía ni tus vecinos. Si prefieres no darlo, no pasa nada:
+        tu reporte se atiende igual. 😊
+      </p>
+    </section>
+
+    <section class="aviso">
+      <p>🔒 <strong>Tu reporte es anónimo.</strong> El policía no sabrá quién eres.</p>
+      <p>🙏 Si te es posible y estás a salvo, acércate a la unidad cuando llegue; nos ayuda a atender mejor tu emergencia.</p>
+      <p>⚠️ <strong>Si hay peligro, no salgas.</strong> Quédate en un lugar seguro, que nosotros nos encargamos.</p>
+    </section>
+
+    <button type="button" id="btnEnviar" class="enviar">🚨 ENVIAR EMERGENCIA</button>
+    <p id="resultado" class="resultado" role="status"></p>
+
+  </main>
+
+  <script src="js/config.js"></script>
+  <script src="js/formulario.js"></script>
+  <script src="js/envio.js"></script>
+</body>
+</html>
