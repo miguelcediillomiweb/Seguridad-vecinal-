@@ -40,7 +40,7 @@
     $("saludo").textContent = saludo;
     $("emojiSaludo").textContent = emoji;
     $("emojiClima").textContent = adorno;
-    $("fechaActual").textContent = ahora.toLocaleDateString("es-MX", {
+    $("fechaActual").textContent = "📅 " + ahora.toLocaleDateString("es-MX", {
       weekday: "long",
       day: "numeric",
       month: "long",
