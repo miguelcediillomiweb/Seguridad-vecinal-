@@ -20,8 +20,36 @@
     });
   });
 
-  const hora = new Date().getHours();
-  $("saludo").textContent = (hora < 12 ? "☀️ Buenos días" : hora < 19 ? "🌤️ Buenas tardes" : "🌙 Buenas noches");
+  function actualizarBannerHora() {
+    const ahora = new Date();
+    const hora = ahora.getHours();
+    let saludo, emoji, adorno;
+    if (hora >= 5 && hora < 12) {
+      saludo = "Buenos días";
+      emoji = "🌅";
+      adorno = "☀️";
+    } else if (hora >= 12 && hora < 19) {
+      saludo = "Buenas tardes";
+      emoji = "🌤️";
+      adorno = "✨";
+    } else {
+      saludo = "Buenas noches";
+      emoji = "🌙";
+      adorno = "⭐";
+    }
+    $("saludo").textContent = saludo;
+    $("emojiSaludo").textContent = emoji;
+    $("emojiClima").textContent = adorno;
+    $("fechaActual").textContent = ahora.toLocaleDateString("es-MX", {
+      weekday: "long",
+      day: "numeric",
+      month: "long",
+      year: "numeric"
+    });
+  }
+  actualizarBannerHora();
+  // Actualiza el saludo y la fecha automáticamente, incluso si la página permanece abierta.
+  window.setInterval(actualizarBannerHora, 60000);
 
   $("btnUbicacion").addEventListener("click", () => {
     const estado = $("estadoUbicacion");
