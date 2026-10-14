@@ -2,61 +2,79 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Reporte vecinal</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#101827">
+  <title>Seguridad Vecinal | Reporte</title>
   <link rel="stylesheet" href="css/estilos.css">
 </head>
 <body>
   <main class="contenedor">
+    <header class="hero">
+      <div class="escudo" aria-hidden="true">🚨</div>
+      <p class="eyebrow">COMUNIDAD · PREVENCIÓN · RESPUESTA</p>
+      <h1 id="saludo">Seguridad Vecinal</h1>
+      <p class="subtitulo">Reporta lo que está pasando en tu colonia.</p>
+      <div class="confianza"><span>🔒</span> Tu identidad es privada para el personal policial</div>
+    </header>
 
-    <h1 id="saludo">Hola 👋</h1>
-    <p class="subtitulo">Cuéntanos qué está pasando.</p>
-
-    <section>
-      <h2>1. ¿Qué está pasando?</h2>
-      <div class="tipos" id="tipos">
-        <button type="button" class="tipo" data-tipo="Robo">🚨 Robo</button>
-        <button type="button" class="tipo" data-tipo="Persona sospechosa">👀 Persona sospechosa</button>
-        <button type="button" class="tipo" data-tipo="Incendio">🔥 Incendio</button>
-        <button type="button" class="tipo" data-tipo="Vehículo extraño">🚗 Vehículo extraño</button>
-        <button type="button" class="tipo" data-tipo="Otro">🆘 Otro</button>
+    <section class="panel">
+      <div class="paso"><span>1</span><div><h2>¿Qué está pasando?</h2><p>Elige una sola opción. Quedará marcada.</p></div></div>
+      <div class="tipos" id="tipos" role="group" aria-label="Tipo de reporte">
+        <button type="button" class="tipo" data-tipo="Robo o asalto"><span class="emoji">🚨</span><span>Robo o asalto</span><span class="marca">✓</span></button>
+        <button type="button" class="tipo" data-tipo="Intento de ingresar a un domicilio"><span class="emoji">🚪</span><span>Intento de ingresar a un domicilio</span><span class="marca">✓</span></button>
+        <button type="button" class="tipo" data-tipo="Persona extraña o sospechosa"><span class="emoji">👀</span><span>Persona extraña o sospechosa</span><span class="marca">✓</span></button>
+        <button type="button" class="tipo" data-tipo="Vehículo o auto sospechoso"><span class="emoji">🚗</span><span>Vehículo o auto sospechoso</span><span class="marca">✓</span></button>
+        <button type="button" class="tipo" data-tipo="Incendio o humo"><span class="emoji">🔥</span><span>Incendio o humo</span><span class="marca">✓</span></button>
+        <button type="button" class="tipo" data-tipo="Disparos o detonaciones"><span class="emoji">⚠️</span><span>Disparos o detonaciones</span><span class="marca">✓</span></button>
+        <button type="button" class="tipo" data-tipo="Pelea o agresión"><span class="emoji">🥊</span><span>Pelea o agresión</span><span class="marca">✓</span></button>
+        <button type="button" class="tipo" data-tipo="Violencia familiar o gritos de auxilio"><span class="emoji">🆘</span><span>Violencia familiar o gritos de auxilio</span><span class="marca">✓</span></button>
+        <button type="button" class="tipo" data-tipo="Ataque de un animal"><span class="emoji">🐕</span><span>Ataque de un animal</span><span class="marca">✓</span></button>
+        <button type="button" class="tipo" data-tipo="Animal herido o maltratado"><span class="emoji">🐾</span><span>Animal herido o maltratado</span><span class="marca">✓</span></button>
+        <button type="button" class="tipo" data-tipo="Emergencia médica / solicitar ambulancia"><span class="emoji">🚑</span><span>Emergencia médica / solicitar ambulancia</span><span class="marca">✓</span></button>
+        <button type="button" class="tipo" data-tipo="Accidente vial"><span class="emoji">🚧</span><span>Accidente vial</span><span class="marca">✓</span></button>
+        <button type="button" class="tipo" data-tipo="Persona lesionada o inconsciente"><span class="emoji">🩹</span><span>Persona lesionada o inconsciente</span><span class="marca">✓</span></button>
+        <button type="button" class="tipo" data-tipo="Fuga de gas u olor extraño"><span class="emoji">💨</span><span>Fuga de gas u olor extraño</span><span class="marca">✓</span></button>
+        <button type="button" class="tipo" data-tipo="Cables caídos o riesgo eléctrico"><span class="emoji">⚡</span><span>Cables caídos o riesgo eléctrico</span><span class="marca">✓</span></button>
+        <button type="button" class="tipo" data-tipo="Inundación o riesgo por lluvia"><span class="emoji">🌧️</span><span>Inundación o riesgo por lluvia</span><span class="marca">✓</span></button>
+        <button type="button" class="tipo" data-tipo="Vandalismo o daños a propiedad"><span class="emoji">🧱</span><span>Vandalismo o daños a propiedad</span><span class="marca">✓</span></button>
+        <button type="button" class="tipo" data-tipo="Ruido excesivo o escándalo"><span class="emoji">📢</span><span>Ruido excesivo o escándalo</span><span class="marca">✓</span></button>
+        <button type="button" class="tipo" data-tipo="Persona extraviada o desaparecida"><span class="emoji">🧍</span><span>Persona extraviada o desaparecida</span><span class="marca">✓</span></button>
+        <button type="button" class="tipo" data-tipo="Robo de vehículo o autopartes"><span class="emoji">🛵</span><span>Robo de vehículo o autopartes</span><span class="marca">✓</span></button>
+        <button type="button" class="tipo" data-tipo="Otro incidente"><span class="emoji">🆘</span><span>Otro incidente</span><span class="marca">✓</span></button>
       </div>
+      <input type="hidden" id="tipoSeleccionado" value="">
     </section>
 
-    <section>
-      <h2>2. ¿Dónde está pasando?</h2>
-      <button type="button" id="btnUbicacion" class="grande">📍 Enviar mi ubicación</button>
-      <p id="estadoUbicacion" class="estado"></p>
+    <section class="panel">
+      <div class="paso"><span>2</span><div><h2>¿Dónde está pasando?</h2><p>Comparte tu ubicación para que puedan encontrarte.</p></div></div>
+      <button type="button" id="btnUbicacion" class="accion ubicacion">📍 <span>Compartir mi ubicación</span><b>→</b></button>
+      <p id="estadoUbicacion" class="estado" role="status">Aún no se ha compartido la ubicación.</p>
     </section>
 
-    <section>
-      <h2>3. Toma una foto</h2>
+    <section class="panel">
+      <div class="paso"><span>3</span><div><h2>¿Puedes agregar una foto?</h2><p>Es opcional. Hazlo solo si es seguro.</p></div></div>
       <input type="file" id="inputFoto" accept="image/*" capture="environment" hidden>
-      <button type="button" id="btnFoto" class="grande">📷 Tomar foto</button>
-      <img id="miniatura" alt="Foto del reporte" hidden>
+      <button type="button" id="btnFoto" class="accion foto">📷 <span>Tomar o elegir una foto</span><b>＋</b></button>
+      <img id="miniatura" alt="Vista previa de la foto" hidden>
+      <p id="estadoFoto" class="estado"></p>
     </section>
 
-    <section>
-      <h2>4. Tu nombre (opcional)</h2>
-      <input type="text" id="nombre" placeholder="Escribe tu nombre" autocomplete="name">
-      <p class="leyenda">
-        💬 Si gustas, escribe tu nombre. Solo lo verá el administrador,
-        nunca el policía ni tus vecinos. Si prefieres no darlo, no pasa nada:
-        tu reporte se atiende igual. 😊
-      </p>
+    <section class="panel">
+      <div class="paso"><span>4</span><div><h2>Tu nombre <small>(opcional)</small></h2><p>También puedes dejarlo en blanco.</p></div></div>
+      <input type="text" id="nombre" placeholder="Escribe tu nombre (opcional)" autocomplete="name" maxlength="100">
+      <p class="privacidad">🔐 Tu nombre, si lo escribes, es para el administrador. El formulario no lo muestra en la pantalla policial.</p>
     </section>
 
-    <section class="aviso">
-      <p>🔒 <strong>Tu reporte es anónimo.</strong> El policía no sabrá quién eres.</p>
-      <p>🙏 Si te es posible y estás a salvo, acércate a la unidad cuando llegue; nos ayuda a atender mejor tu emergencia.</p>
-      <p>⚠️ <strong>Si hay peligro, no salgas.</strong> Quédate en un lugar seguro, que nosotros nos encargamos.</p>
+    <section class="seguridad">
+      <h3>🛡️ Primero, ponte a salvo</h3>
+      <p>⚠️ No te acerques a una persona sospechosa ni salgas si hacerlo te pone en peligro.</p>
+      <p>📞 Si hay peligro inmediato o necesitas una ambulancia o bomberos, llama también al <strong>911</strong>. Este formulario no sustituye los servicios de emergencia.</p>
     </section>
 
-    <button type="button" id="btnEnviar" class="enviar">🚨 ENVIAR EMERGENCIA</button>
-    <p id="resultado" class="resultado" role="status"></p>
-
+    <button type="button" id="btnEnviar" class="enviar"><span>🚨</span><span>ENVIAR REPORTE</span><span>➜</span></button>
+    <p id="resultado" class="resultado" role="status" aria-live="polite"></p>
+    <footer>Seguridad Vecinal · Juntos cuidamos nuestra comunidad 🤝</footer>
   </main>
-
   <script src="js/config.js"></script>
   <script src="js/formulario.js"></script>
   <script src="js/envio.js"></script>
