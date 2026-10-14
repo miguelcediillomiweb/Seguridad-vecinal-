@@ -10,9 +10,20 @@
 <body>
   <main class="contenedor">
     <header class="hero">
-      <div class="escudo" aria-hidden="true">🚨</div>
-      <p class="eyebrow">COMUNIDAD · PREVENCIÓN · RESPUESTA</p>
-      <h1 id="saludo">Seguridad Vecinal</h1>
+      <section class="saludo-banner" aria-label="Saludo y fecha actual">
+        <span id="emojiSaludo" class="emoji-hora" aria-hidden="true">🌤️</span>
+        <div class="saludo-textos">
+          <p class="eyebrow">COMUNIDAD · PREVENCIÓN · RESPUESTA</p>
+          <h1 id="saludo">Buenas tardes</h1>
+          <p id="fechaActual" class="fecha-actual">Cargando fecha…</p>
+        </div>
+        <span id="emojiClima" class="emoji-hora emoji-secundario" aria-hidden="true">✨</span>
+      </section>
+      <section class="titulo-banner" aria-label="Reportes vecinales">
+        <span class="vehiculo-animado patrulla" aria-hidden="true">🚓</span>
+        <div><h2>REPORTES VECINALES</h2><p>Tu comunidad, más segura 🤝</p></div>
+        <span class="vehiculo-animado torreta" aria-hidden="true">🚨</span>
+      </section>
       <p class="subtitulo">Reporta lo que está pasando en tu colonia.</p>
       <div class="confianza"><span>🔒</span> Tu identidad es privada para el personal policial</div>
     </header>
