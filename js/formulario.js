@@ -46,10 +46,15 @@
       month: "long",
       year: "numeric"
     });
+    $("horaActual").textContent = "🕒 " + ahora.toLocaleTimeString("es-MX", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true
+    });
   }
   actualizarBannerHora();
   // Actualiza el saludo y la fecha automáticamente, incluso si la página permanece abierta.
-  window.setInterval(actualizarBannerHora, 60000);
+  window.setInterval(actualizarBannerHora, 1000);
 
   $("btnUbicacion").addEventListener("click", () => {
     const estado = $("estadoUbicacion");
