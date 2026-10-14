@@ -43,3 +43,27 @@ footer{text-align:center;color:#73859e;font-size:11px;padding:10px 0 0}
 button:focus-visible{outline:3px solid #fff;outline-offset:3px}
 [hidden]{display:none!important}
 @media(min-width:500px){.contenedor{padding-top:28px}.panel{padding:22px}.tipo{min-height:57px;font-size:15px}}
+
+/* Banners de bienvenida y reportes vecinales */
+.hero{padding:10px 0 22px}
+.saludo-banner{position:relative;display:flex;align-items:center;justify-content:space-between;gap:9px;overflow:hidden;text-align:left;padding:17px 14px;border:1px solid #3a5273;border-radius:22px;background:linear-gradient(125deg,#1c3453 0%,#142238 58%,#202b49 100%);box-shadow:0 12px 32px #0003}
+.saludo-banner:before{content:"";position:absolute;inset:0 auto 0 0;width:4px;background:linear-gradient(#ffca62,#ff6476,#55c7ff)}
+.saludo-textos{flex:1;min-width:0}
+.saludo-banner .eyebrow{font-size:9px;letter-spacing:1.35px;margin:0 0 6px}
+.saludo-banner h1{font-size:clamp(23px,6vw,32px);letter-spacing:-.7px}
+.fecha-actual{margin:7px 0 0;color:#d2e3fa;font-size:12px;font-weight:650;text-transform:capitalize}
+.emoji-hora{flex:0 0 auto;display:grid;place-items:center;width:46px;height:46px;border-radius:15px;background:#ffffff10;font-size:31px;filter:drop-shadow(0 3px 5px #0004);animation:flotarEmoji 2.6s ease-in-out infinite}
+.emoji-secundario{font-size:24px;width:33px;height:33px;align-self:flex-start;animation:brillarEmoji 1.8s ease-in-out infinite}
+.titulo-banner{display:flex;align-items:center;justify-content:space-between;gap:5px;margin-top:11px;padding:13px 10px;border:1px solid #38536e;border-radius:19px;background:linear-gradient(100deg,#101d30,#1b2d46 50%,#101d30);box-shadow:inset 0 1px #ffffff0a,0 9px 24px #0002}
+.titulo-banner>div{flex:1;text-align:center;min-width:0}
+.titulo-banner h2{font-size:clamp(14px,4vw,19px);letter-spacing:.7px;font-weight:950;margin:0;color:#f5f9ff;text-shadow:0 2px 12px #43b8ff40}
+.titulo-banner p{font-size:10px;color:#a9c6e4;margin:4px 0 0}
+.vehiculo-animado{display:inline-block;flex:0 0 auto;font-size:clamp(30px,8vw,40px);filter:drop-shadow(0 4px 5px #0005)}
+.patrulla{animation:patrullaMovimiento 2.8s ease-in-out infinite}
+.torreta{animation:destelloTorreta .85s steps(2,end) infinite}
+.confianza{margin-top:15px}
+@keyframes flotarEmoji{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-5px) rotate(4deg)}}
+@keyframes brillarEmoji{0%,100%{transform:scale(.92);opacity:.72}50%{transform:scale(1.12);opacity:1}}
+@keyframes patrullaMovimiento{0%,100%{transform:translateX(0) rotate(0)}25%{transform:translateX(3px) rotate(-2deg)}55%{transform:translateX(-2px) rotate(1deg)}}
+@keyframes destelloTorreta{0%,49%{filter:drop-shadow(0 0 2px #ff4357);transform:scale(1)}50%,100%{filter:drop-shadow(0 0 12px #ff4357);transform:scale(1.08)}}
+@media(prefers-reduced-motion:reduce){.emoji-hora,.emoji-secundario,.patrulla,.torreta{animation:none!important}}
