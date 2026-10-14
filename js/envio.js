@@ -7,7 +7,7 @@
     const datos = reporte.obtenerDatos();
     const boton = $("btnEnviar");
     const salida = $("resultado");
-    if (!window.CONFIG || !CONFIG.URL_BACKEND || CONFIG.URL_BACKEND.includes("PEGA_AQUI")) {
+    if (typeof CONFIG === "undefined" || !CONFIG.URL_BACKEND || CONFIG.URL_BACKEND.includes("PEGA_AQUI")) {
       salida.textContent = "⚠️ Falta configurar el destino del reporte. Avísale al administrador.";
       return;
     }
