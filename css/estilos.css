@@ -67,3 +67,22 @@ button:focus-visible{outline:3px solid #fff;outline-offset:3px}
 @keyframes patrullaMovimiento{0%,100%{transform:translateX(0) rotate(0)}25%{transform:translateX(3px) rotate(-2deg)}55%{transform:translateX(-2px) rotate(1deg)}}
 @keyframes destelloTorreta{0%,49%{filter:drop-shadow(0 0 2px #ff4357);transform:scale(1)}50%,100%{filter:drop-shadow(0 0 12px #ff4357);transform:scale(1.08)}}
 @media(prefers-reduced-motion:reduce){.emoji-hora,.emoji-secundario,.patrulla,.torreta{animation:none!important}}
+
+
+/* Actualización visual: hora grande, animaciones evidentes y lectura accesible */
+.saludo-banner{padding:19px 14px;border-color:#5a7da7;background:linear-gradient(125deg,#24466c 0%,#172d49 55%,#303b67 100%);animation:entradaBanner .7s ease-out both}
+.saludo-banner h1{font-size:clamp(27px,7vw,36px);line-height:1.12;text-shadow:0 2px 14px #4bbdff40}
+.saludo-banner .eyebrow{font-size:10px;font-weight:850;letter-spacing:1px;color:#b9d9ff}
+.fecha-actual{font-size:clamp(13px,3.7vw,16px);line-height:1.4;color:#fff;margin-top:9px}
+.hora-actual{display:inline-flex;align-items:center;gap:6px;margin:8px 0 0;padding:6px 10px;border-radius:11px;background:#07152680;border:1px solid #ffffff28;color:#fff;font-size:clamp(17px,4.5vw,21px);font-weight:900;letter-spacing:.4px;font-variant-numeric:tabular-nums}
+.titulo-banner{min-height:78px;border-color:#5c7595;background:linear-gradient(100deg,#0b192b,#243e5d 50%,#0b192b);animation:entradaBanner .85s .1s ease-out both}
+.titulo-banner h2{font-size:clamp(15px,4.2vw,21px);line-height:1.25;letter-spacing:.25px}
+.vehiculo-animado{font-size:clamp(36px,10vw,48px)}
+.patrulla{animation:patrullaMovimiento 1.8s ease-in-out infinite,lucesPatrulla 1s steps(2,end) infinite}
+.torreta{animation:destelloTorreta .55s steps(2,end) infinite}
+.emoji-hora{width:52px;height:52px;font-size:35px;animation:flotarEmoji 1.8s ease-in-out infinite,brilloEmojiHora 2s ease-in-out infinite}
+.emoji-secundario{width:37px;height:37px;font-size:26px;animation:brillarEmoji 1.2s ease-in-out infinite}
+@keyframes entradaBanner{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes lucesPatrulla{0%,49%{filter:drop-shadow(0 0 2px #ff3b54)}50%,100%{filter:drop-shadow(0 0 12px #4bbdff)}}
+@keyframes brilloEmojiHora{0%,100%{filter:drop-shadow(0 0 2px #fff2)}50%{filter:drop-shadow(0 0 12px #ffdc78)}}
+@media(prefers-reduced-motion:reduce){.saludo-banner,.titulo-banner{animation:none!important}}
