@@ -86,3 +86,8 @@ button:focus-visible{outline:3px solid #fff;outline-offset:3px}
 @keyframes lucesPatrulla{0%,49%{filter:drop-shadow(0 0 2px #ff3b54)}50%,100%{filter:drop-shadow(0 0 12px #4bbdff)}}
 @keyframes brilloEmojiHora{0%,100%{filter:drop-shadow(0 0 2px #fff2)}50%{filter:drop-shadow(0 0 12px #ffdc78)}}
 @media(prefers-reduced-motion:reduce){.saludo-banner,.titulo-banner{animation:none!important}}
+
+/* Espacio entre el campo de calle y el botón de ubicación */
+#calle {
+  margin-bottom: 12px;
+}
