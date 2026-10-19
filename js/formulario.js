@@ -56,24 +56,41 @@
   // Actualiza el saludo y la fecha automáticamente, incluso si la página permanece abierta.
   window.setInterval(actualizarBannerHora, 1000);
 
-  $("btnUbicacion").addEventListener("click", () => {
+  // ---------- Ubicación (un solo botón, nunca bloquea el envío) ----------
+  function iniciarUbicacion() {
+    const boton = $("btnUbicacion");
     const estado = $("estadoUbicacion");
-    if (!navigator.geolocation) {
-      estado.textContent = "Tu navegador no permite compartir ubicación. Puedes continuar e indicar la ubicación en el reporte.";
-      return;
-    }
-    estado.textContent = "📍 Buscando tu ubicación…";
-    $("btnUbicacion").disabled = true;
-    navigator.geolocation.getCurrentPosition(pos => {
-      ubicacion = { latitud: pos.coords.latitude, longitud: pos.coords.longitude, precision: pos.coords.accuracy };
-      estado.textContent = "✅ Ubicación lista (precisión aproximada: " + Math.round(pos.coords.accuracy) + " m).";
-      $("btnUbicacion").disabled = false;
-    }, err => {
-      ubicacion = null;
-      estado.textContent = err.code === 1 ? "No se dio permiso de ubicación. Puedes intentarlo de nuevo." : "No pudimos obtener la ubicación. Inténtalo de nuevo en un lugar con señal.";
-      $("btnUbicacion").disabled = false;
-    }, { enableHighAccuracy:true, timeout:15000, maximumAge:0 });
-  });
+
+    const MENSAJE_FALLO =
+      "No se pudo tomar la ubicación. No te preocupes: escribe tu calle arriba y envía tu reporte.";
+
+    boton.addEventListener("click", function () {
+      if (!navigator.geolocation) {
+        estado.textContent = MENSAJE_FALLO;
+        return;
+      }
+
+      estado.textContent = "Buscando tu ubicación…";
+
+      navigator.geolocation.getCurrentPosition(
+        function (posicion) {
+          ubicacion = {
+            latitud: posicion.coords.latitude,
+            longitud: posicion.coords.longitude,
+            precision: Math.round(posicion.coords.accuracy)
+          };
+          boton.classList.add("listo");
+          boton.textContent = "✅ Ubicación enviada";
+          estado.textContent = "";
+        },
+        function () {
+          estado.textContent = MENSAJE_FALLO;
+        },
+        { enableHighAccuracy: false, timeout: 10000, maximumAge: 60000 }
+      );
+    });
+  }
+  iniciarUbicacion();
 
   $("btnFoto").addEventListener("click", () => $("inputFoto").click());
   $("inputFoto").addEventListener("change", async () => {
