@@ -17,6 +17,7 @@
       tipo: datos.tipo,
       categoria: datos.tipo,
       nombre: datos.nombre,
+      calle: datos.calle,
       latitud: datos.latitud,
       longitud: datos.longitud,
       lat: datos.latitud,
