@@ -117,6 +117,7 @@
     obtenerDatos: () => ({
       tipo: tipoElegido,
       nombre: $("nombre").value.trim(),
+      calle: $("calle").value.trim(),
       latitud: ubicacion ? ubicacion.latitud : "",
       longitud: ubicacion ? ubicacion.longitud : "",
       precision: ubicacion ? ubicacion.precision : "",
