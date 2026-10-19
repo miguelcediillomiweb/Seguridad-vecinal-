@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Alertas | Seguridad Vecinal</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: #101827;
+      color: #ffffff;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 20px;
+      line-height: 1.4;
+    }
+    main { max-width: 520px; margin: 0 auto; padding: 24px 16px 40px; }
+    h1 { font-size: 30px; margin: 10px 0; }
+    .aviso { color: #cbd5e1; margin-bottom: 24px; }
+    button {
+      width: 100%;
+      min-height: 80px;
+      font-size: 24px;
+      font-weight: bold;
+      border: none;
+      border-radius: 16px;
+      background: #d90429;
+      color: #ffffff;
+      padding: 12px;
+    }
+    button.listo { background: #198754; }
+    button:disabled { background: #64748b; }
+    #estado { margin: 16px 0; font-weight: bold; min-height: 28px; }
+    section {
+      background: #1e293b;
+      border-radius: 16px;
+      padding: 16px;
+      margin-top: 20px;
+      font-size: 18px;
+    }
+    section h2 { font-size: 20px; margin: 0 0 8px; }
+    section p { margin: 0 0 8px; }
+  </style>
+  <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+</head>
+<body>
+  <main>
+    <h1>🔔 Alertas de Seguridad Vecinal</h1>
+    <p class="aviso">Solo para personal autorizado. Activa las alertas para recibir un aviso con sonido cada vez que llegue un reporte.</p>
+
+    <button type="button" id="btnActivar" disabled>Cargando…</button>
+    <p id="estado" role="status"></p>
+
+    <section>
+      <h2>📱 Cómo activarlas</h2>
+      <p>1. Toca el botón rojo.</p>
+      <p>2. Cuando el teléfono pregunte, toca <strong>Permitir</strong>.</p>
+      <p>3. Listo: el botón se pone verde.</p>
+      <p>Para abrirla rápido: en el menú del navegador (⋮) elige <strong>Agregar a la pantalla de inicio</strong>.</p>
+    </section>
+  </main>
+
+  <script>
+    window.OneSignalDeferred = window.OneSignalDeferred || [];
+
+    const boton = document.getElementById("btnActivar");
+    const estado = document.getElementById("estado");
+
+    function mostrarActivo() {
+      boton.textContent = "✅ Alertas activadas";
+      boton.classList.add("listo");
+      boton.disabled = true;
+      estado.textContent = "Recibirás una alerta con sonido cuando llegue un reporte.";
+    }
+
+    function mostrarListo() {
+      boton.textContent = "🔔 Activar alertas";
+      boton.disabled = false;
+    }
+
+    OneSignalDeferred.push(async function (OneSignal) {
+      await OneSignal.init({
+        appId: "2de8dd15-37dd-4804-b646-39dfdca09887",
+        serviceWorkerPath: "OneSignalSDKWorker.js",
+        serviceWorkerParam: { scope: "/Seguridad-vecinal-/" },
+        notifyButton: { enable: false }
+      });
+
+      if (!OneSignal.Notifications.isPushSupported()) {
+        boton.textContent = "No disponible";
+        estado.textContent = "Este navegador no permite alertas. Abre esta página con Chrome.";
+        return;
+      }
+
+      if (OneSignal.User.PushSubscription.optedIn) {
+        mostrarActivo();
+      } else {
+        mostrarListo();
+      }
+
+      OneSignal.User.PushSubscription.addEventListener("change", function (evento) {
+        if (evento.current.optedIn) mostrarActivo();
+      });
+
+      boton.addEventListener("click", async function () {
+        estado.textContent = "Esperando tu permiso…";
+        try {
+          await OneSignal.Notifications.requestPermission();
+          if (OneSignal.Notifications.permission) {
+            await OneSignal.User.PushSubscription.optIn();
+          } else {
+            estado.textContent =
+              "Las alertas están bloqueadas. Activa los permisos de notificaciones de este sitio en los ajustes del navegador.";
+          }
+        } catch (e) {
+          estado.textContent = "No se pudo activar. Intenta de nuevo.";
+        }
+      });
+    });
+  </script>
+</body>
+</html>
