@@ -58,9 +58,10 @@
     </section>
 
     <section class="panel">
-      <div class="paso"><span>2</span><div><h2>¿Dónde está pasando?</h2><p>Comparte tu ubicación para que puedan encontrarte.</p></div></div>
-      <button type="button" id="btnUbicacion" class="accion ubicacion">📍 <span>Compartir mi ubicación</span><b>→</b></button>
-      <p id="estadoUbicacion" class="estado" role="status">Aún no se ha compartido la ubicación.</p>
+      <div class="paso"><span>2</span><div><h2>¿En qué calle estás?</h2><p>Escribe la calle y número para facilitar que te encuentren. La ubicación del teléfono es opcional.</p></div></div>
+      <input type="text" id="calle" placeholder="Escribe tu calle y número" autocomplete="street-address" maxlength="200">
+      <button type="button" id="btnUbicacion" class="grande">📍 Enviar mi ubicación (opcional)</button>
+      <p id="estadoUbicacion" class="estado" role="status">Puedes compartir la ubicación del teléfono o indicar solo la calle.</p>
     </section>
 
     <section class="panel">
