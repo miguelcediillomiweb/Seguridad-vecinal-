@@ -213,3 +213,18 @@ footer{padding-top:18px;color:#91a2b8}
   .panel,.tipo,.accion,.grande,input[type="text"],.enviar{transition:none!important}
   .accion:after,.grande:after,.enviar:after{display:none}
 }
+
+/* ===== BRILLO VISIBLE EN CELULAR · SEGURIDAD VECINAL ===== */
+.saludo-banner{border-color:#58c8ff!important;box-shadow:0 12px 32px #0005,0 0 24px #43b8ff42!important;animation:segBannerGlow 3s ease-in-out infinite}
+.saludo-banner:after{content:"";position:absolute;inset:-30% auto -30% -55%;width:34%;transform:skewX(-20deg);background:linear-gradient(90deg,transparent,#ffffff40,transparent);pointer-events:none;animation:segLightSweep 5s ease-in-out infinite}
+.titulo-banner{border-color:#43b8ff99!important;box-shadow:0 9px 24px #0005,0 0 22px #43b8ff30!important}
+.panel{border-color:#3e6285!important;box-shadow:0 10px 26px #0005,0 0 18px #43b8ff12!important}
+.tipo{border-color:#3e6285!important;box-shadow:0 4px 12px #0003;transition:transform .2s,border-color .2s,box-shadow .2s,background .2s!important}
+.tipo[aria-pressed="true"]{box-shadow:0 0 0 3px #43b8ff24,0 0 24px #43b8ff55!important}
+.accion{border-color:#5bcaff!important;box-shadow:0 7px 20px #0005,0 0 18px #43b8ff25!important}
+.enviar{background:linear-gradient(110deg,#ff4058,#e21d43 48%,#ff6b77)!important;box-shadow:0 10px 28px #ff405855,0 0 25px #ff405833!important;animation:segSendGlow 2.2s ease-in-out infinite}
+@keyframes segBannerGlow{50%{box-shadow:0 12px 32px #0005,0 0 36px #43b8ff68}}
+@keyframes segLightSweep{0%,60%{left:-55%;opacity:0}70%{opacity:1}100%{left:140%;opacity:0}}
+@keyframes segSendGlow{50%{box-shadow:0 10px 32px #ff405877,0 0 35px #ff405855}}
+@media(prefers-reduced-motion:reduce){.saludo-banner,.saludo-banner:after,.enviar{animation:none!important}}
+
